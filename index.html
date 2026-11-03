@@ -1,0 +1,251 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>StrongStart | Workout Tracker</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#18263d;--text:#edf3ff;--muted:#a9b7ce;--line:#2b3b55;--accent:#7dd3fc;--green:#86efac;--yellow:#fcd34d;--radius:18px}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(900px 500px at 90% -10%,#1d3856 0%,transparent 60%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{max-width:1100px;margin:auto;padding:28px 20px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#7dd3fc,#86efac);display:grid;place-items:center;color:#102033;font-size:23px;font-weight:900}
+h1{font-size:clamp(24px,4vw,34px);margin:0;letter-spacing:-.7px}.sub{color:var(--muted);font-size:13px}
+main{max-width:1100px;margin:auto;padding:12px 20px 50px}
+nav{display:flex;gap:8px;overflow:auto;padding:8px 0 18px}
+.tab{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 15px;border-radius:999px;cursor:pointer;white-space:nowrap;font:inherit}
+.tab.active{background:var(--accent);color:#092033;border-color:var(--accent);font-weight:750}
+.view{display:none}.view.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{background:linear-gradient(160deg,var(--panel),#101a2b);border:1px solid var(--line);border-radius:var(--radius);padding:18px;min-width:0}
+.span8{grid-column:span 8}.span4{grid-column:span 4}.span6{grid-column:span 6}.span12{grid-column:span 12}
+.card h2{font-size:19px;margin:0 0 12px}.muted{color:var(--muted)}.small{font-size:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--panel2);padding:14px;border-radius:14px}.stat strong{display:block;font-size:25px}.stat span{font-size:12px;color:var(--muted)}
+.progress{height:10px;background:#26364e;border-radius:99px;overflow:hidden;margin:10px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#7dd3fc,#86efac);border-radius:99px;transition:width .2s}
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.day{background:var(--panel2);padding:12px 8px;border-radius:13px;text-align:center;border:1px solid transparent}.day.done{border-color:#4ade80}.day b{display:block}.day span{font-size:11px;color:var(--muted)}
+button,.button{border:0;border-radius:11px;padding:10px 14px;background:var(--accent);color:#092033;font:inherit;font-weight:700;cursor:pointer}.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}.danger{background:#44232c;color:#fecdd3;border:1px solid #793644}
+.exercise{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);align-items:center}.exercise-visual{width:76px;height:68px;border-radius:12px;background:linear-gradient(145deg,#1b3450,#12243a);border:1px solid #35506d;display:grid;place-items:center;overflow:hidden}.exercise-visual svg{width:70px;height:62px}.exercise-visual .person{stroke:#bfe8ff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none}.exercise-visual .equipment{stroke:#86efac;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none}.exercise-visual .ground{stroke:#7188a7;stroke-width:2;stroke-linecap:round}.exercise-visual .accent{fill:#86efac;stroke:none}.exercise:last-child{border:0}.exercise b{display:block}.exercise small{color:var(--muted)}
+.checkline{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}.checkline input{width:19px;height:19px;accent-color:#86efac}
+select,input,textarea{background:#0d1727;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:10px;font:inherit;width:100%}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 5px}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;margin-top:14px}
+.photo{background:var(--panel2);border:1px solid var(--line);border-radius:13px;overflow:hidden}.photo img{width:100%;height:150px;object-fit:cover;display:block}.photo div{padding:9px}.photo button{margin-top:7px;width:100%}
+.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+.notice{border-left:3px solid var(--yellow);padding:10px 13px;background:#292719;border-radius:8px;color:#fef3c7;font-size:13px}
+.chart{width:100%;height:220px;background:#0d1727;border-radius:12px;border:1px solid var(--line)}
+footer{color:var(--muted);font-size:12px;text-align:center;padding:25px 10px}
+@media(max-width:760px){.span8,.span4,.span6{grid-column:span 12}.days{grid-template-columns:repeat(2,1fr)}.formgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}header{align-items:flex-start}.sub{max-width:210px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">↗</div><div><h1>StrongStart</h1><div class="sub">Your home workout & strength tracker</div></div></div>
+ <div class="sub" id="todayLabel"></div>
+</header>
+<main>
+<nav aria-label="Main navigation">
+ <button class="tab active" data-tab="overview">Overview</button>
+ <button class="tab" data-tab="workouts">Workouts</button>
+ <button class="tab" data-tab="progress">Progress</button>
+ <button class="tab" data-tab="photos">Photo journal</button>
+</nav>
+
+<section class="view active" id="overview">
+ <div class="grid">
+  <article class="card span8">
+   <h2>This week's consistency</h2>
+   <p class="muted small">Check off a session when you complete it. Rest days count as part of a good training plan.</p>
+   <div class="days" id="weekDays"></div>
+   <div class="progress"><div class="bar" id="weekBar"></div></div>
+   <div class="small muted" id="weekText">0 of 5 training sessions completed</div>
+  </article>
+  <article class="card span4">
+   <h2>Your focus</h2>
+   <div class="stats">
+    <div class="stat"><strong id="pushStat">—</strong><span>Push-ups*</span></div>
+    <div class="stat"><strong id="hangStat">—</strong><span>Hang (sec)</span></div>
+    <div class="stat"><strong id="sessionsStat">0</strong><span>Sessions</span></div>
+   </div>
+   <p class="small muted">*Record only comfortable, controlled reps. No need to test to exhaustion.</p>
+   <button class="secondary" onclick="showTab('progress')">Log progress</button>
+  </article>
+  <article class="card span12">
+   <h2>Today's suggested session</h2>
+   <div id="todayWorkout"></div>
+   <div class="actions"><button onclick="showTab('workouts')">Open workout plan</button></div>
+  </article>
+  <article class="card span12">
+   <div class="notice"><b>Train safely:</b> At 15, focus on getting stronger, learning good technique, eating regular balanced meals, and sleeping 8–10 hours. This app does not track body weight or calories. Stop if you feel pain, dizziness, or unusual discomfort, and ask a parent/guardian or qualified coach to check your form.</div>
+  </article>
+ </div>
+</section>
+
+<section class="view" id="workouts">
+ <div class="grid">
+  <article class="card span12">
+   <h2>5-day home plan · about 30 minutes</h2>
+   <p class="muted small">Start with the listed sets. Rest about 60–90 seconds between sets, and use a weight you can control without straining. Warm up for 5 minutes and cool down for 5 minutes.</p>
+   <div id="workoutList"></div>
+  </article>
+  <article class="card span12">
+   <div class="notice">Use a sturdy, non-slip surface for incline push-ups. For pull-up practice, use a secure bar and stable foot support; don't jump, swing, or force repetitions. If you are unsure about a movement, ask an adult or coach to help with technique.</div>
+  </article>
+ </div>
+</section>
+
+<section class="view" id="progress">
+ <div class="grid">
+  <article class="card span6">
+   <h2>Log a strength milestone</h2>
+   <p class="small muted">Record a comfortable set, not a maximum-effort test.</p>
+   <label for="dateInput">Date</label><input type="date" id="dateInput">
+   <div class="formgrid">
+    <div><label for="pushInput">Controlled push-ups</label><input type="number" id="pushInput" min="0" max="100" placeholder="e.g. 3"></div>
+    <div><label for="hangInput">Comfortable hang (seconds)</label><input type="number" id="hangInput" min="0" max="180" placeholder="e.g. 25"></div>
+    <div><label for="noteInput">How did it feel?</label><select id="noteInput"><option>Good</option><option>Okay</option><option>Tired — took it easy</option></select></div>
+   </div>
+   <label for="progressNote">Notes (optional)</label><textarea id="progressNote" rows="2" placeholder="For example: incline push-ups felt more controlled."></textarea>
+   <div class="actions"><button id="saveProgress">Save entry</button></div>
+  </article>
+  <article class="card span6">
+   <h2>Progress over time</h2>
+   <canvas id="progressChart" class="chart" width="650" height="300" aria-label="Push-up progress chart"></canvas>
+   <p class="small muted">Chart shows recorded push-up reps. Changes can be gradual and vary from week to week.</p>
+  </article>
+  <article class="card span12">
+   <h2>Recent entries</h2><div id="entries"></div>
+  </article>
+ </div>
+</section>
+
+<section class="view" id="photos">
+ <div class="grid">
+  <article class="card span6">
+   <h2>Photo journal</h2>
+   <p class="small muted">Add pictures of workout notes, your exercise setup, or a skill milestone. If you choose personal progress photos, keep them private and focus on how you feel and what you can do—not comparing your body to others.</p>
+   <label for="photoInput">Choose an image</label><input id="photoInput" type="file" accept="image/*">
+   <label for="photoCaption">Caption</label><input id="photoCaption" maxlength="100" placeholder="e.g. First week completed">
+   <div class="actions"><button id="savePhoto">Add to journal</button></div>
+   <p class="small muted">Images stay in this browser on this device. They are not uploaded to a server or synced between devices.</p>
+  </article>
+  <article class="card span6">
+   <h2>Privacy & backup</h2>
+   <p class="small muted">Your workout entries and photo journal are stored locally in this browser. Clearing browser data may erase them. Export a backup occasionally.</p>
+   <div class="actions"><button class="secondary" id="exportData">Export backup</button><button class="secondary" id="importButton">Import backup</button><input id="importFile" type="file" accept="application/json" hidden></div>
+  </article>
+  <article class="card span12"><h2>Your journal</h2><div id="photoGrid" class="photo-grid"><div class="empty">No images yet. Add your first journal image above.</div></div></article>
+ </div>
+</section>
+<footer>StrongStart · Built for consistency, skill and healthy progress. Not medical advice.</footer>
+</main>
+<script>
+const plan = [
+ {day:"Monday",title:"Upper body",focus:"Chest, shoulders and triceps",items:[["Incline push-ups","3 × 6–10","Use a sturdy elevated surface; stop while reps are still controlled."],["Dumbbell floor press","2 × 10","5–10 lb, controlled."],["Dumbbell shoulder press","2 × 8","Start with 5 lb if comfortable."],["Lateral raises","2 × 10","5 lb or lighter if needed."],["Plank","2 × 15–20 sec","Keep a straight, comfortable position."]]},
+ {day:"Tuesday",title:"Lower body",focus:"Legs and hips",items:[["Bodyweight squats","2 × 10–12","Move smoothly and keep balance."],["Goblet squat","2 × 8–10","Hold one 10 lb dumbbell close to your chest."],["Reverse lunges","2 × 6 each leg","Bodyweight first; use support for balance."],["Glute bridges","2 × 12","Pause briefly at the top."],["Calf raises","2 × 12–15","Use a wall or sturdy support for balance."]]},
+ {day:"Wednesday",title:"Athletic conditioning",focus:"Coordination, stamina and core",items:[["Easy jog or brisk walk","5 min","Backyard or safe route."],["Jumping jacks","2 × 20 sec","Low-impact step-outs are fine."],["High knees or marching","2 × 20 sec","Choose a pace where you stay in control."],["Lateral shuffles","2 × 15 sec","Use a clear, level space."],["Bird dogs","2 × 8 each side","Move slowly."],["Dead bugs","2 × 8 each side","Keep lower back comfortable."]]},
+ {day:"Thursday",title:"Back and arms",focus:"Back, biceps and grip",items:[["One-arm dumbbell row","2 × 10 each side","10 lb if you can keep your back steady."],["Hammer curls","2 × 8–10","5–10 lb."],["Biceps curls","2 × 8–10","Use a weight you can control."],["Dead hang","2 × 15–25 sec","Only if the bar is securely installed; stop before grip fails."],["Scapular pull-up","2 × 3–5","Small, gentle shoulder movement."],["Foot-assisted pull-up practice","2 × 3","Only with a secure bar and stable support; skip if unsure."]]},
+ {day:"Friday",title:"Full body",focus:"Practice the week's movement skills",items:[["Incline push-ups","2 × 6–8","Keep a few good reps in reserve."],["Goblet squat","2 × 8–10","10 lb if comfortable."],["One-arm dumbbell row","2 × 10 each side","5–10 lb."],["Glute bridges","2 × 12","Controlled."],["Plank","2 × 15–25 sec","Stop if form changes."]]}
+];
+const $=id=>document.getElementById(id);
+const today=new Date(); const iso=d=>{const x=new Date(d);x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,10)};
+$("todayLabel").textContent=today.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+$("dateInput").value=iso(today);
+function read(key, fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
+function write(key,val){localStorage.setItem(key,JSON.stringify(val))}
+let completed=read("ss_completed",{}), entries=read("ss_entries",[]), photos=read("ss_photos",[]);
+function showTab(name){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));if(name==="progress")drawChart()}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+function weekKey(d){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return iso(x)}
+function renderOverview(){
+ const monday=new Date();monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
+ $("weekDays").innerHTML=plan.map((p,i)=>{let d=new Date(monday);d.setDate(d.getDate()+i);let key=iso(d),done=!!completed[key];return `<div class="day ${done?'done':''}"><b>${p.day.slice(0,3)}</b><span>${done?'Completed':'Planned'}</span><div style="margin-top:8px"><input aria-label="Mark ${p.day} complete" type="checkbox" data-day="${key}" ${done?'checked':''}></div></div>`}).join("");
+ $("weekDays").querySelectorAll("input").forEach(inp=>inp.addEventListener("change",()=>{completed[inp.dataset.day]=inp.checked;write("ss_completed",completed);renderOverview()}));
+ const count=plan.reduce((n,p,i)=>{let d=new Date(monday);d.setDate(d.getDate()+i);return n+(completed[iso(d)]?1:0)},0);
+ $("weekBar").style.width=(count/5*100)+"%";$("weekText").textContent=`${count} of 5 training sessions completed this week`;
+ $("sessionsStat").textContent=Object.values(completed).filter(Boolean).length;
+ const latest=entries[entries.length-1];$("pushStat").textContent=latest?.pushups??"—";$("hangStat").textContent=latest?.hang??"—";
+ let idx=(today.getDay()+6)%7; $("todayWorkout").innerHTML=idx<5?`<b>${plan[idx].day}: ${plan[idx].title}</b><p class="muted small">${plan[idx].focus}</p>`:`<b>Recovery day</b><p class="muted small">Take a rest day or enjoy gentle recreational activity.</p>`;
+}
+function exerciseArt(name){
+ const n=name.toLowerCase();
+ let body='<circle class="person" cx="36" cy="13" r="6"/><path class="person" d="M36 20 L36 39 M36 25 L23 32 M36 25 L49 32 M36 39 L25 54 M36 39 L47 54"/>';
+ let extra='<path class="ground" d="M8 57 H64"/>';
+ if(n.includes("push-up")){
+   body='<circle class="person" cx="18" cy="27" r="5"/><path class="person" d="M24 30 L47 37 L57 48 M31 32 L25 48 M47 37 L51 49"/>';
+   extra='<path class="ground" d="M8 54 H64 M53 35 V54 M53 35 H63"/>';
+ }else if(n.includes("floor press")){
+   body='<circle class="person" cx="20" cy="39" r="5"/><path class="person" d="M26 39 L47 39 M33 39 L31 23 L31 13 M43 39 L45 23 L45 13 M47 39 L57 48"/>';
+   extra='<path class="ground" d="M8 51 H64"/><path class="equipment" d="M27 12 H35 M41 12 H49 M31 8 V16 M45 8 V16"/>';
+ }else if(n.includes("squat")){
+   body='<circle class="person" cx="36" cy="10" r="5"/><path class="person" d="M36 16 L36 31 L24 39 L18 53 M36 31 L49 38 L55 53 M36 21 L23 28 M36 21 L49 28"/>';
+   extra='<path class="ground" d="M8 57 H64"/>';
+   if(n.includes("goblet")) extra+='<path class="equipment" d="M30 25 H42 L40 34 H32 Z"/>';
+ }else if(n.includes("lunge")){
+   body='<circle class="person" cx="36" cy="9" r="5"/><path class="person" d="M36 15 L36 32 L22 42 L18 54 M36 32 L51 38 L57 53 M36 20 L23 28 M36 20 L49 28"/>';
+   extra='<path class="ground" d="M8 57 H64"/>';
+ }else if(n.includes("row")){
+   body='<circle class="person" cx="28" cy="14" r="5"/><path class="person" d="M31 20 L43 34 L53 47 M40 30 L25 36 L18 46 M43 34 L54 30"/>';
+   extra='<path class="ground" d="M8 55 H64"/><path class="equipment" d="M49 26 H59 M52 22 V30 M56 22 V30"/>';
+ }else if(n.includes("curl")||n.includes("raise")||n.includes("press")){
+   body='<circle class="person" cx="36" cy="10" r="5"/><path class="person" d="M36 16 L36 39 L26 55 M36 39 L46 55 M36 23 L22 30 L22 17 M36 23 L50 30 L50 17"/>';
+   extra='<path class="ground" d="M8 57 H64"/><path class="equipment" d="M16 14 H28 M22 10 V18 M44 14 H56 M50 10 V18"/>';
+ }else if(n.includes("hang")||n.includes("pull-up")||n.includes("scapular")){
+   body='<circle class="person" cx="36" cy="26" r="5"/><path class="person" d="M36 32 L36 46 M36 34 L23 15 M36 34 L49 15 M36 46 L27 55 M36 46 L45 55"/>';
+   extra='<path class="equipment" d="M12 9 H60 M22 9 V14 M50 9 V14"/>';
+ }else if(n.includes("plank")||n.includes("bird dog")||n.includes("dead bug")){
+   body='<circle class="person" cx="16" cy="35" r="5"/><path class="person" d="M22 36 L45 38 L58 48 M31 37 L26 52 M45 38 L51 52 M30 37 L22 25"/>';
+   extra='<path class="ground" d="M8 55 H64"/>';
+ }else if(n.includes("bridge")){
+   body='<circle class="person" cx="17" cy="36" r="5"/><path class="person" d="M23 37 L34 26 L48 34 L55 50 M48 34 L57 40"/>';
+   extra='<path class="ground" d="M8 54 H64"/>';
+ }else if(n.includes("calf")){
+   body='<circle class="person" cx="36" cy="10" r="5"/><path class="person" d="M36 16 L36 38 L28 52 M36 38 L44 52 M36 23 L24 30 M36 23 L48 30"/>';
+   extra='<path class="ground" d="M8 56 H64"/><path class="equipment" d="M52 25 V54"/>';
+ }else if(n.includes("jog")||n.includes("high knees")||n.includes("march")||n.includes("jacks")||n.includes("shuffle")){
+   body='<circle class="person" cx="36" cy="10" r="5"/><path class="person" d="M36 16 L34 33 L20 42 M34 33 L49 27 L57 36 M34 33 L27 52 M34 33 L47 47 M34 22 L20 18 M34 22 L49 13"/>';
+   extra='<path class="ground" d="M8 57 H64"/><path class="accent" d="M10 20 l6 -4 v8z M60 20 l-6 -4 v8z"/>';
+ }
+ return `<div class="exercise-visual" role="img" aria-label="Illustration showing ${name}"><svg viewBox="0 0 72 64" aria-hidden="true">${extra}${body}</svg></div>`;
+}
+function renderWorkouts(){
+ $("workoutList").innerHTML=plan.map((p,i)=>`<details class="card" style="margin:12px 0;padding:14px" ${i===0?"open":""}><summary style="cursor:pointer;font-weight:750">${p.day} · ${p.title}<div class="muted small">${p.focus}</div></summary><div style="margin-top:8px">${p.items.map(it=>`<div class="exercise">${exerciseArt(it[0])}<div><b>${it[0]}</b><small>${it[2]}</small></div><strong>${it[1]}</strong></div>`).join("")}</div></details>`).join("");
+}
+$("saveProgress").addEventListener("click",()=>{
+ const p=$("pushInput").value,h=$("hangInput").value;
+ if(p===""&&h===""){alert("Enter at least one milestone.");return}
+ const e={date:$("dateInput").value||iso(today),pushups:p===""?null:Number(p),hang:h===""?null:Number(h),feeling:$("noteInput").value,note:$("progressNote").value.trim()};
+ entries.push(e);entries.sort((a,b)=>a.date.localeCompare(b.date));write("ss_entries",entries);
+ $("pushInput").value="";$("hangInput").value="";$("progressNote").value="";renderEntries();renderOverview();drawChart();
+});
+function renderEntries(){
+ if(!entries.length){$("entries").innerHTML='<div class="empty">No entries yet. Add a milestone above.</div>';return}
+ $("entries").innerHTML=[...entries].reverse().slice(0,12).map(e=>`<div class="exercise"><div><b>${new Date(e.date+"T12:00:00").toLocaleDateString()}</b><small>${e.note||e.feeling}</small></div><span class="small">${e.pushups??"—"} push-ups · ${e.hang??"—"} sec hang</span></div>`).join("");
+}
+function drawChart(){
+ const c=$("progressChart"),ctx=c.getContext("2d"),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.strokeStyle="#30435f";ctx.fillStyle="#a9b7ce";ctx.font="14px system-ui";
+ const pts=entries.filter(e=>e.pushups!==null&&Number.isFinite(e.pushups));
+ for(let i=0;i<5;i++){let y=25+i*(h-55)/4;ctx.beginPath();ctx.moveTo(42,y);ctx.lineTo(w-15,y);ctx.stroke()}
+ if(!pts.length){ctx.fillText("Log a push-up milestone to see your chart.",55, h/2);return}
+ const max=Math.max(5,...pts.map(p=>p.pushups)),min=0;
+ ctx.fillText("Reps",8,18);
+ ctx.strokeStyle="#7dd3fc";ctx.lineWidth=3;ctx.beginPath();
+ pts.forEach((p,i)=>{let x=55+(pts.length===1?0:i*(w-95)/(pts.length-1)),y=h-30-(p.pushups-min)/(max-min||1)*(h-75);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();
+ pts.forEach((p,i)=>{let x=55+(pts.length===1?0:i*(w-95)/(pts.length-1)),y=h-30-(p.pushups-min)/(max-min||1)*(h-75);ctx.fillStyle="#86efac";ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle="#edf3ff";ctx.fillText(String(p.pushups),x-4,y-12)});
+}
+$("savePhoto").addEventListener("click",()=>{
+ const file=$("photoInput").files[0];if(!file){alert("Choose an image first.");return}if(!file.type.startsWith("image/")){alert("Please choose an image file.");return}
+ const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=900,scale=Math.min(1,max/Math.max(img.width,img.height)),canvas=document.createElement("canvas");canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);let data=canvas.toDataURL("image/jpeg",.78);photos.unshift({id:Date.now(),date:iso(today),caption:$("photoCaption").value.trim(),data});try{write("ss_photos",photos);renderPhotos();$("photoInput").value="";$("photoCaption").value=""}catch(err){photos.shift();alert("Browser storage is full. Export your data, then remove some older images and try again.")}};img.src=reader.result};reader.readAsDataURL(file);
+});
+function renderPhotos(){
+ $("photoGrid").innerHTML=photos.length?photos.map(p=>`<div class="photo"><img src="${p.data}" alt="Journal image"><div><b>${p.caption||"Workout journal"}</b><div class="small muted">${p.date}</div><button class="danger" data-remove="${p.id}">Delete image</button></div></div>`).join(""):'<div class="empty">No images yet. Add your first journal image above.</div>';
+ $("photoGrid").querySelectorAll("[data-remove]").forEach(b=>b.addEventListener("click",()=>{if(confirm("Delete this journal image?")){photos=photos.filter(p=>p.id!==Number(b.dataset.remove));write("ss_photos",photos);renderPhotos()}}));
+}
+$("exportData").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({version:1,completed,entries,photos},null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="strongstart-backup.json";a.click();URL.revokeObjectURL(url)});
+$("importButton").addEventListener("click",()=>$("importFile").click());
+$("importFile").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||!Array.isArray(d.entries)||!Array.isArray(d.photos))throw Error();completed=d.completed||{};entries=d.entries;photos=d.photos;write("ss_completed",completed);write("ss_entries",entries);write("ss_photos",photos);renderAll();alert("Backup imported.")}catch{alert("That backup file could not be read.")}};r.readAsText(f)});
+function renderAll(){renderOverview();renderWorkouts();renderEntries();renderPhotos();drawChart()}
+renderAll();
+</script>
+</body>
+</html>
